@@ -1,0 +1,26 @@
+# dependencies
+node_modules
+
+# compiled output
+build
+release
+.gitignore
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# source
+.babelrc
+.fatherrc.js
+.eslintrc
+.gitignore
+package-lock.json
+yarn.lock

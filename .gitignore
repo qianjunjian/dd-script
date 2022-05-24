@@ -1,0 +1,11 @@
+node_modules/
+dist/
+doc_dist/
+lib/
+es/
+coverage/
+.umi/
+.umi-production/
+.history
+yarn.lock
+package-lock.json
