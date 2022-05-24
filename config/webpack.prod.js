@@ -20,7 +20,8 @@ const timeStamp = dayjs().format('YYYYMMDDHHmmss');
 
 function getModulePackageName(module) {
     if (!module.context) return null;
-    const nodeModulesPath = path.join(__dirname, "../node_modules/");
+    let nodeModulesPath = resolveFile("node_modules");
+    nodeModulesPath = path.join(nodeModulesPath, "/");
     if (module.context.substring(0, nodeModulesPath.length) !== nodeModulesPath) {
         return null;
     }
