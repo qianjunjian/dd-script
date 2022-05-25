@@ -78,10 +78,10 @@ module.exports = {
         publicPath: "",
         open: true, // 自动打开浏览器
     },
-    useVConsole: true, // 是否启用vconsole
+    useVConsole: true, // 是否启用vconsole，会自动插入vconsole.min.js，以及初始化脚本。不需要配置insertHtml
     useAnalyzer: false, // 是否使用打包分析
     insertHtml: { // 向html插入额外的脚本
-        beforeInner: ["./lib/sensorsdata.min.js"], // 向webpack生成的脚本之前插入script
+        beforeInner: ["./lib/sensorsdata.min.js"], // 向webpack生成的脚本之前插入script, vconsole.min.js不需要配置
         afterInner: [] // 向webpack生成的脚本之后插入script
     },
     useReactRefresh: true, // 使用热更新，开发环境下使用
