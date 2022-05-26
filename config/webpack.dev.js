@@ -4,6 +4,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const common = require("./webpack.common");
 const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
 const HtmlInsertPlugin = require("./htmlInsertPlugin");
@@ -45,6 +46,10 @@ const getConfig = () => {
                 xhtml: true
             }),
             new CaseSensitivePathsPlugin(),
+            ddConfig?.useReactRefresh &&
+            new ReactRefreshWebpackPlugin({
+                overlay: false,
+            }),
             new MiniCssExtractPlugin({
                 filename: "[name].css",
                 chunkFilename: "[id].css"
