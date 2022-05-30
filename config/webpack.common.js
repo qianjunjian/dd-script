@@ -27,13 +27,22 @@ module.exports = {
         rules: [
             { 
                 test: /\.(js|jsx|ts|tsx)$/,
-                include: [
-                    resolveFile("src"),
-                    ddConfig?.babelTransformContains && ddConfig.babelTransformContains.map(fileUrl => resolveFile(fileUrl))
-                ].filter(Boolean),
+                exclude: {
+                    and: [/node_modules/],
+                    not: [
+                        ddConfig?.babelTransformContains
+                    ].filter(Boolean),
+                },
                 use: {
                     loader: "babel-loader",
                     options: {
+                        presets: [
+                            ddConfig?.babelTransformContains && ['@babel/preset-env', { 
+                                targets: "ie 11",
+                                useBuiltIns: "usage",
+                                corejs: 3
+                            }]
+                        ].filter(Boolean),
                         plugins: [
                             isEnvDevelopment && ddConfig?.useReactRefresh && require.resolve('react-refresh/babel'),
                         ].filter(Boolean),
