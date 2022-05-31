@@ -4,6 +4,31 @@ const { ddConfigFileUrl, resolveFile, cacheBabelLoaderFile } = require("./getFil
 const ddConfig = require(ddConfigFileUrl);
 const isEnvDevelopment = process.env.NODE_ENV === "development";
 
+const getBabelOptions = () => {
+    const options = {
+        cacheCompression: false,
+        compact: false
+    }
+
+    if (isEnvDevelopment) {
+        if (ddConfig?.useReactRefresh) {
+            options.plugins = [
+                require.resolve('react-refresh/babel')
+            ];
+        }
+        options.cacheDirectory = cacheBabelLoaderFile;
+    }
+
+    if (ddConfig?.babelTransformContains) {
+        options.presets = ['@babel/preset-env', { 
+            targets: "ie 11",
+            useBuiltIns: "usage",
+            corejs: 3
+        }];
+    }
+    return options;
+}
+
 module.exports = {
     entry: {
         index: resolveFile("src/index.jsx")
@@ -35,21 +60,7 @@ module.exports = {
                 },
                 use: {
                     loader: "babel-loader",
-                    options: {
-                        presets: [
-                            ddConfig?.babelTransformContains && ['@babel/preset-env', { 
-                                targets: "ie 11",
-                                useBuiltIns: "usage",
-                                corejs: 3
-                            }]
-                        ].filter(Boolean),
-                        plugins: [
-                            isEnvDevelopment && ddConfig?.useReactRefresh && require.resolve('react-refresh/babel'),
-                        ].filter(Boolean),
-                        cacheDirectory: isEnvDevelopment && cacheBabelLoaderFile,
-                        cacheCompression: false,
-                        compact: false
-                    }
+                    options: getBabelOptions()
                 }
             },
             {
