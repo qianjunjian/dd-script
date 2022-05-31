@@ -20,14 +20,17 @@ const getBabelOptions = () => {
     }
 
     if (ddConfig?.babelTransformContains) {
-        options.presets = ['@babel/preset-env', { 
-            targets: "ie 11",
-            useBuiltIns: "usage",
-            corejs: 3
-        }];
+        options.presets = [
+            ['@babel/preset-env', { 
+                targets: "ie 11",
+                useBuiltIns: "usage",
+                corejs: 3
+            }]
+        ];
     }
     return options;
 }
+
 
 module.exports = {
     entry: {
