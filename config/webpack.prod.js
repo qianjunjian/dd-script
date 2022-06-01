@@ -16,7 +16,7 @@ const ddConfig = require(ddConfigFileUrl);
 const releasePath = resolveFile(ddConfig.releasePath || "release");
 const reactVendor = ddConfig.reactVendor || [];
 const libVendor = ddConfig.libVendor || [];
-const timeStamp = dayjs().format('YYYYMMDDHHmmss');
+const timeStamp = dayjs().format('YYYYMMDDHH');
 
 function getModulePackageName(module) {
     if (!module.context) return null;
@@ -39,7 +39,7 @@ module.exports = merge(common, {
     output: {
         path: path.join(releasePath, ddConfig?.publicPath?.prd),
         publicPath: ddConfig?.publicPath?.prd || "./app/",
-        filename: "[name]." + timeStamp + ".[fullhash].js"
+        filename: "[name]." + timeStamp + ".[hash:8].js"
     },
     optimization: {
         minimizer: [
@@ -116,8 +116,8 @@ module.exports = merge(common, {
             xhtml: true
         }),
         new MiniCssExtractPlugin({
-            filename: "[name].[fullhash].css",
-            chunkFilename: "[id].[fullhash].css"
+            filename: "[name].[hash:8].css",
+            chunkFilename: "[id].[hash:8].css"
         }),
         ...(ddConfig?.plugins?.dev || [])
     ].filter(Boolean)
