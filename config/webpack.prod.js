@@ -39,7 +39,7 @@ module.exports = merge(common, {
     output: {
         path: path.join(releasePath, ddConfig?.publicPath?.prd),
         publicPath: ddConfig?.publicPath?.prd || "./app/",
-        filename: "[name]." + timeStamp + ".[hash:8].js"
+        filename: "[name]." + timeStamp + ".[fullhash:8].js"
     },
     optimization: {
         minimizer: [
@@ -116,8 +116,8 @@ module.exports = merge(common, {
             xhtml: true
         }),
         new MiniCssExtractPlugin({
-            filename: "[name].[hash:8].css",
-            chunkFilename: "[id].[hash:8].css"
+            filename: "[name].[fullhash:8].css",
+            chunkFilename: "[id].[fullhash:8].css"
         }),
         ...(ddConfig?.plugins?.dev || [])
     ].filter(Boolean)
