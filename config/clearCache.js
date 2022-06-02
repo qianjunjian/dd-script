@@ -36,9 +36,13 @@ const shouldClearCache = () => {
     }
 }
 
+
 const createRecordFile = current => {
     const day = ddConfig?.cacheTimeout || 7;
-    fs.mkdirSync(cacheFolder);
+    const isFolderExist = fs.existsSync(cacheFolder);
+    if (!isFolderExist) {
+        fs.mkdirSync(cacheFolder);
+    }
     fs.writeFileSync(cacheRecordFile, JSON.stringify({
         timeout: current + day * 24 * 60 * 60 * 1000
     }))

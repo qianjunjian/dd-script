@@ -6,7 +6,7 @@ process.on('unhandledRejection', err => {
 
 const versionList = process.version.replace("v", "").split(".");
 if (versionList && Number(versionList[0]) < 14) {
-  console.log("---------- node版本太低，请使用14以上版本，推荐14.17.0版本 ----------");
+  console.log("\x1B[31m%s\x1B[39m", "---------- node版本太低，请使用14以上版本，推荐14.17.0版本 ----------");
   console.log("");
   process.exit(0);
 }
