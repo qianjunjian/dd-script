@@ -40,7 +40,7 @@ function getModulePackageName(module) {
 module.exports = merge(common, {
     mode: "production",
     output: {
-        path: path.join(releasePath, ddConfig?.publicPath?.prd),
+        path: releasePath,
         publicPath: ddConfig?.publicPath?.prd || "",
         filename: pathJoin(ddConfig.assetsDir, "js/[name]." + timeStamp + ".[fullhash:8].js")
     },
