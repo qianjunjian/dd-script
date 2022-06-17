@@ -66,10 +66,11 @@
 module.exports = {
     buildPath: "build", // 编译目录，默认build目录
     releasePath: "release", // 生成打包目录
-    useMerroyBuild: false, // 使用内存编译，否则开发环境编译文件会写入buildPath目录
+    assetsDir: "app", // 静态资源包裹目录
+    useMerroyBuild: true, // 使用内存编译，否则开发环境编译文件会写入buildPath目录
     publicPath: {
         dev: "./", // 开发环境output的publicPath, 当useMerroyBuild为true时，此配置无效
-        prd: "./app/" // 生产环境output的publicPath
+        prd: "./" // 生产环境output的publicPath
     },
     devtool: "", // 开发环境下使用这个配置，默认 cheap-module-source-map
     devServer: {

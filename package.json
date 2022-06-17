@@ -1,6 +1,6 @@
 {
   "name": "dd-script",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -39,7 +39,6 @@
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.0.0",
     "dayjs": "^1.11.2",
-    "file-loader": "^6.2.0",
     "fs-extra": "^10.1.0",
     "html-webpack-plugin": "^5.5.0",
     "less": "^4.1.2",

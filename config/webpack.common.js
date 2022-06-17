@@ -1,8 +1,25 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { ddConfigFileUrl, resolveFile, cacheBabelLoaderFile } = require("./getFiles");
+const { getCssFileName, pathJoin } = require("./getFileName");
 
 const ddConfig = require(ddConfigFileUrl);
 const isEnvDevelopment = process.env.NODE_ENV === "development";
+
+let cssPublicPath = ""
+if (!isEnvDevelopment) {
+    const cssFileName = getCssFileName(ddConfig.assetsDir);
+    const publicPath = ddConfig.publicPath.prd;
+    cssPublicPath = publicPath.startsWith('/')
+    ? publicPath
+    : '../'.repeat(
+        cssFileName
+        .replace(/^\.[/\\]/, '')
+        .split(/[/\\]/g)
+        .length - 1
+    )
+} else {
+    cssPublicPath = "./";
+}
 
 const getBabelOptions = () => {
     const options = {
@@ -72,7 +89,9 @@ module.exports = {
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
-                        options: {}
+                        options: {
+                            publicPath: cssPublicPath
+                        }
                     },
                     {
                         loader: "css-loader",
@@ -121,7 +140,9 @@ module.exports = {
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
-                        options: {}
+                        options: {
+                            publicPath: cssPublicPath
+                        }
                     },
                     {
                         loader: "css-loader",
@@ -169,7 +190,9 @@ module.exports = {
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
-                        options: {}
+                        options: {
+                            publicPath: cssPublicPath
+                        }
                     },
                     {
                         loader: "css-loader",
@@ -185,15 +208,10 @@ module.exports = {
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,
-                use: [
-                    {
-                        loader: "file-loader",
-                        options: {
-                            publicPath: "./",
-                            name: "images/[name].[hash].[ext]"
-                        }
-                    }
-                ]
+                type: "asset/resource",
+                generator: {
+                    filename: pathJoin(ddConfig.assetsDir, "images/[name].[hash][ext]")
+                }
             },
             ...(ddConfig?.rules || [])
         ].filter(Boolean)

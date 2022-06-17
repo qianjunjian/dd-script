@@ -11,12 +11,15 @@ const dayjs = require("dayjs");
 const HtmlInsertPlugin = require("./htmlInsertPlugin");
 const { converUrlListByNodeEnv } = require("./getVconsole");
 const { ddConfigFileUrl, resolveFile, appHtml } = require("./getFiles");
-
+const { getCssFileName, getCssChunkFileName, pathJoin } = require("./getFileName");
 const ddConfig = require(ddConfigFileUrl);
 const releasePath = resolveFile(ddConfig.releasePath || "release");
 const reactVendor = ddConfig.reactVendor || [];
 const libVendor = ddConfig.libVendor || [];
 const timeStamp = dayjs().format('YYYYMMDDHH');
+
+const cssFileName = getCssFileName(ddConfig.assetsDir);
+const cssChunkFileName = getCssChunkFileName(ddConfig.assetsDir)
 
 function getModulePackageName(module) {
     if (!module.context) return null;
@@ -38,8 +41,8 @@ module.exports = merge(common, {
     mode: "production",
     output: {
         path: path.join(releasePath, ddConfig?.publicPath?.prd),
-        publicPath: ddConfig?.publicPath?.prd || "./app/",
-        filename: "[name]." + timeStamp + ".[fullhash:8].js"
+        publicPath: ddConfig?.publicPath?.prd || "",
+        filename: pathJoin(ddConfig.assetsDir, "js/[name]." + timeStamp + ".[fullhash:8].js")
     },
     optimization: {
         minimizer: [
@@ -116,8 +119,8 @@ module.exports = merge(common, {
             xhtml: true
         }),
         new MiniCssExtractPlugin({
-            filename: "[name].[fullhash:8].css",
-            chunkFilename: "[id].[fullhash:8].css"
+            filename: cssFileName,
+            chunkFilename: cssChunkFileName
         }),
         ...(ddConfig?.plugins?.dev || [])
     ].filter(Boolean)
