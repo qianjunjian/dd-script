@@ -153,7 +153,8 @@ module.exports = {
                                 // 启用 CSS 模块或者可交互 CSS 格式
                                 // 为所有满足 /\.module(s)?\.\w+$/i.test(filename) 条件的文件设置 modules.mode 选项为 local，
                                 // 或者为所有满足 /\.icss\.\w+$/i.test(filename) 条件的文件设置 modules.mode 选项为 icss
-                                mode: 'local'
+                                mode: 'local',
+                                localIdentName: "[name]__[local]--[hash:base64:5]"
                             },
                         }
                     },
