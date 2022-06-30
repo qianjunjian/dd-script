@@ -4,13 +4,15 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const glob = require("glob-all");
+const PurgecssPlugin = require("purgecss-webpack-plugin");
 const common = require("./webpack.common");
-var WebpackBar = require("webpackbar");
+const WebpackBar = require("webpackbar");
 const path = require("path");
 const dayjs = require("dayjs");
 const HtmlInsertPlugin = require("./htmlInsertPlugin");
 const { converUrlListByNodeEnv } = require("./getVconsole");
-const { ddConfigFileUrl, resolveFile, appHtml } = require("./getFiles");
+const { ddConfigFileUrl, resolveFile, pathWithJoin, appHtml } = require("./getFiles");
 const { getCssFileName, getCssChunkFileName, pathJoin } = require("./getFileName");
 const ddConfig = require(ddConfigFileUrl);
 const releasePath = resolveFile(ddConfig.releasePath || "release");
@@ -35,6 +37,17 @@ function getModulePackageName(module) {
         packageName = packageName.match(/^_(@?[^@]+)/)[1];
     }
     return packageName;
+}
+
+let cssPaths = [];
+let safeCssPath = [];
+if (ddConfig.cssSharking && ddConfig.cssSharking.list) {
+    csspaths = ddConfig.cssSharking.list.map(path => {
+        pathWithJoin(path);
+    });
+    safeCssPaths = ddConfig.cssSharking.safeList.map(path => {
+        pathWithJoin(path);
+    })
 }
 
 module.exports = merge(common, {
@@ -106,6 +119,14 @@ module.exports = merge(common, {
     plugins: [
         ddConfig.useAnalyzer && new BundleAnalyzerPlugin(),
         new WebpackBar(),
+        ddConfig.cssSharking && new PurgecssPlugin({
+            paths: glob.sync(cssPaths,{
+                nodir: true
+            }),
+            safelist: glob.sync(safeCssPath,{
+                nodir: true
+            })
+        }),
         new HtmlInsertPlugin({
             useVConsole: ddConfig?.useVConsole,
             beforeInner: converUrlListByNodeEnv(ddConfig?.insertHtml?.beforeInner),
