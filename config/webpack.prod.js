@@ -4,8 +4,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const glob = require("glob-all");
-const PurgecssPlugin = require("purgecss-webpack-plugin");
+// const glob = require("glob-all");
+// const PurgecssPlugin = require("purgecss-webpack-plugin");
 const common = require("./webpack.common");
 const WebpackBar = require("webpackbar");
 const path = require("path");
@@ -39,16 +39,16 @@ function getModulePackageName(module) {
     return packageName;
 }
 
-let cssPaths = [];
-let safeCssPath = [];
-if (ddConfig.cssSharking && ddConfig.cssSharking.list) {
-    csspaths = ddConfig.cssSharking.list.map(path => {
-        pathWithJoin(path);
-    });
-    safeCssPaths = ddConfig.cssSharking.safeList.map(path => {
-        pathWithJoin(path);
-    })
-}
+// let cssPaths = [];
+// let safeCssPath = [];
+// if (ddConfig.cssSharking && ddConfig.cssSharking.list) {
+//     ddConfig.cssSharking.list.map(ph => {
+//         cssPaths.push(pathWithJoin(ph));
+//     });
+//     ddConfig.cssSharking.safeList.map(ph => {
+//         safeCssPath.push(pathWithJoin(ph));
+//     })
+// }
 
 module.exports = merge(common, {
     mode: "production",
@@ -107,6 +107,7 @@ module.exports = merge(common, {
                     priority: 9
                 },
                 vendor: {
+                    chunks: "initial",
                     name: "vendors",
                     test({ resource }) {
                         return /[\\/]node_modules[\\/]/.test(resource);
@@ -119,14 +120,14 @@ module.exports = merge(common, {
     plugins: [
         ddConfig.useAnalyzer && new BundleAnalyzerPlugin(),
         new WebpackBar(),
-        ddConfig.cssSharking && new PurgecssPlugin({
-            paths: glob.sync(cssPaths,{
-                nodir: true
-            }),
-            safelist: glob.sync(safeCssPath,{
-                nodir: true
-            })
-        }),
+        // ddConfig.cssSharking && new PurgecssPlugin({
+        //     paths: glob.sync(cssPaths,{
+        //         nodir: true
+        //     }),
+        //     safelist: glob.sync(safeCssPath,{
+        //         nodir: true
+        //     })
+        // }),
         new HtmlInsertPlugin({
             useVConsole: ddConfig?.useVConsole,
             beforeInner: converUrlListByNodeEnv(ddConfig?.insertHtml?.beforeInner),
