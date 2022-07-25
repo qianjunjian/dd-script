@@ -93,6 +93,7 @@ module.exports = {
     //     dev: [], // 开发环境下额外增加的插件
     //     prd: [] // 生产环境下额外增加的插件
     // },
+    useMock: true, // 是否启用mock，根目录下新建mocks文件夹
     reactVendor: [ // 如果引用了下面包，就会打包到 reactRel.min.js 中
         "react",
         "react-dom",
@@ -111,4 +112,18 @@ module.exports = {
         "better-scroll"
     ]
 }
+```
+
+4. mock文件
+```
+const router = require('koa-router')()
+
+router.get('/', async (ctx, next) => {
+  ctx.body = {
+    title: "123",
+    a: 12
+  }
+})
+
+module.exports = router
 ```

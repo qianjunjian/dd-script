@@ -13,6 +13,7 @@ const { shouldClearCache } = require("../config/clearCache");
 const WebpackDevServer = require("webpack-dev-server");
 const openBrowser = require("react-dev-utils/openBrowser");
 const clearConsole = require('react-dev-utils/clearConsole');
+const getPort = require('get-port');
 const { ddConfigFileUrl, pkgFileUrl, appPublic, resolveFile } = require("../config/getFiles")
 
 const ddConfig = require(ddConfigFileUrl);
@@ -24,11 +25,16 @@ process.env.HOST = HOST;
 
 shouldClearCache();
 
-choosePort(HOST, DEFAULT_PORT).then(port => {
+choosePort(HOST, DEFAULT_PORT).then(async port => {
     if (port == null) {
         return;
     }
     process.env.PORT = port;
+
+    if (ddConfig?.useMock) {
+        let apiPort = await getPort({port: Number(port) + 1})
+        process.env.apiPORT = apiPort;
+    }
 
     let devServer = "";
     if (ddConfig?.useMerroyBuild) {
@@ -85,6 +91,12 @@ choosePort(HOST, DEFAULT_PORT).then(port => {
         const processRef = cmd.run(`webpack --config=${webpackConfig} --progress --color --watch`);
         processRef.stdout.pipe(process.stdout);
         processRef.stderr.pipe(process.stderr);
+    }
+
+    if (ddConfig?.useMock) {
+        const processApiRef = cmd.run(`./node_modules/.bin/nodemon bin/www --watch ./routes`);
+        processApiRef.stdout.pipe(process.stdout);
+        processApiRef.stderr.pipe(process.stderr);
     }
 
     process.on("SIGINT", function () {
