@@ -13,7 +13,7 @@ const { shouldClearCache } = require("../config/clearCache");
 const WebpackDevServer = require("webpack-dev-server");
 const openBrowser = require("react-dev-utils/openBrowser");
 const clearConsole = require('react-dev-utils/clearConsole');
-const getPort = require('get-port');
+const getPort = require('../utils/getPort');
 const { ddConfigFileUrl, pkgFileUrl, appPublic, resolveFile } = require("../config/getFiles")
 
 const ddConfig = require(ddConfigFileUrl);
@@ -73,7 +73,17 @@ choosePort(HOST, DEFAULT_PORT).then(async port => {
                 historyApiFallback: { 
                     disableDotRule: true, 
                     index: '/' 
-                }
+                },
+                proxy: ddConfig?.useMock ? {
+                    '/mockApi/**':  {
+                        target: "http://0.0.0.0:" + process.env.apiPORT,
+                        changeOrigin: true,
+                        secure:false,
+                        pathRewrite: {
+                            '^/mockApi': '/' 
+                        }
+                    },
+                }: {}
             },
             compiler
         )
@@ -94,7 +104,8 @@ choosePort(HOST, DEFAULT_PORT).then(async port => {
     }
 
     if (ddConfig?.useMock) {
-        const processApiRef = cmd.run(`./node_modules/.bin/nodemon bin/www --watch ./routes`);
+        const _www = path.resolve(__dirname, "../bin/www");
+        const processApiRef = cmd.run(`nodemon ${_www} --watch ./mocks`);
         processApiRef.stdout.pipe(process.stdout);
         processApiRef.stderr.pipe(process.stderr);
     }
